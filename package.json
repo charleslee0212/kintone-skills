@@ -2,13 +2,19 @@
   "name": "kintone-skills",
   "version": "1.0.0",
   "description": "Sync Kintone's internal Claude skills repo into a project's directory",
-  "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "build:dev": "tsc --watch"
+    "build:dev": "tsc --watch",
+    "prepublishOnly": "npm run build"
   },
   "bin": {
     "kintone-skills": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=16.7"
   },
   "keywords": [],
   "author": "",
