@@ -1,0 +1,20 @@
+{
+  "name": "kintone-skills",
+  "version": "1.0.0",
+  "description": "Sync Kintone's internal Claude skills repo into a project's directory",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "build:dev": "tsc --watch"
+  },
+  "bin": {
+    "kintone-skills": "./dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "typescript": "^7.0.2"
+  }
+}
