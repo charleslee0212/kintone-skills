@@ -5,17 +5,23 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-const GITHUB_REPO = 'https://github.com/Kintone-US/kintone-claude-skills.git';
+// kintone-claude-skills (the old standalone repo) is discontinued -
+// kintone-skills-webapp's kintone-skills/ subfolder is now the single
+// source of truth for both the hosted webapp and local/npx usage.
+const GITHUB_REPO = 'https://github.com/Kintone-US/kintone-skills-webapp.git';
+const SOURCE_SUBDIR = 'kintone-skills';
 const DEFAULT_TARGET = './';
 const PRESERVE_DIR = 'projects';
 
 // Internal-only content that must never reach a user's project, on any run.
+// feedback-reviewer.md/feedback-review.md stay excluded locally not because
+// of the webapp's Admin-flag gating (that's hosted-only and doesn't apply
+// here - see SKILL.md) but because reviewing feedback only makes sense
+// against the whole team's accumulated feedback corpus, which only the
+// hosted webapp's EFS volume has - a single local clone never accumulates
+// enough of its own to make that command useful.
 const EXCLUDED_ROOT_DIRS = ['feedback', 'tasks'];
-const EXCLUDED_FILENAMES = [
-  'initiate-testing.md',
-  'feedback-reviewer.md',
-  'feedback-review.md',
-];
+const EXCLUDED_FILENAMES = ['feedback-reviewer.md', 'feedback-review.md'];
 
 function log(msg: string) {
   console.log(msg);
@@ -140,7 +146,13 @@ export default () => {
   log(`↻ Fetching Kintone skills...`);
   const tmpDir = cloneToTempDir(GITHUB_REPO);
   try {
-    copySkills(tmpDir, targetDir);
+    const sourceDir = path.join(tmpDir, SOURCE_SUBDIR);
+    if (!fs.existsSync(sourceDir)) {
+      fail(
+        `Expected a "${SOURCE_SUBDIR}" directory in ${GITHUB_REPO} but didn't find one - has the repo layout changed?`,
+      );
+    }
+    copySkills(sourceDir, targetDir);
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }
