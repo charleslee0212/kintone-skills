@@ -1,6 +1,6 @@
 {
   "name": "kintone-skills",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Sync Kintone's internal Claude skills repo into a project's directory",
   "scripts": {
     "build": "tsc",
